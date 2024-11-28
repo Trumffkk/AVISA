@@ -1,22 +1,22 @@
-name: Avica
+name: Tailscale - Docker
 
-on:
+on: 
   workflow_dispatch:
-
+    
 jobs:
   build:
-    name: Start Building...
-    runs-on: windows-latest
-    timeout-minutes: 9999
-    
+    runs-on: ubuntu-latest
     steps:
-      - name: Downloading & Installing Essentials
+      - name: chuẩn bị phần mềm
         run: |
-          Invoke-WebRequest -Uri "https://gitlab.com/raposabrty/pcrdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
-          cmd /c Downloads.bat
-
-      - name: Show Website
-        run: cmd /c show.bat
-
-      - name: Time Counter
-        run: cmd /c loop.bat
+          sudo apt update -y
+          sudo apt install wget curl -y
+          curl -fsSL https://tailscale.com/install.sh | sh
+          sudo tailscale up
+      - name: cài win và khởi chạy
+        run: |
+          sudo chmod 666 /dev/kvm
+          wget https://github.com/jshruwyd/ActionDocker/raw/main/compose.yaml
+          tailscale ip -4
+          echo "thanh cong, ket noi bang port 8006 o trinh duyet Chrome"
+          sudo docker compose up
